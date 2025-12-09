@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Ven.AccessData.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,9 @@ builder.Services.AddOpenApi();
 // builder.Services.AddEndpointsApiExplorer();
 // builder.Services.AddSwaggerGen();
 
+// Conexion a la base de datos en otro proyecto (assembly)
+builder.Services.AddDbContext<DataContext>(x => 
+    x.UseSqlServer("name=DefaultConnection", options => options.MigrationsAssembly("Ven.Backend")));
 
 var app = builder.Build();
 
