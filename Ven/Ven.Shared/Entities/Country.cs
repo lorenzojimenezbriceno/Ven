@@ -10,5 +10,7 @@ namespace Ven.Shared.Entities
         [Required]
         [MaxLength(200)]
         public string Name { get; set; } = null!;
+
+        public bool Active { get; set; }
     }
 }
