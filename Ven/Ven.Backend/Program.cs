@@ -15,8 +15,23 @@ builder.Services.AddOpenApi();
 // builder.Services.AddSwaggerGen();
 
 // Conexion a la base de datos en otro proyecto (assembly)
+
 builder.Services.AddDbContext<DataContext>(x => 
     x.UseSqlServer("name=DefaultConnection", options => options.MigrationsAssembly("Ven.Backend")));
+
+// Agregar CORS
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", builder =>
+    {
+        builder
+            .WithOrigins("https://localhost:7098") // Dominio de la aplicacion Blazor
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithExposedHeaders(new string[] { "Totalpages", "Counting" });
+    });
+});
 
 var app = builder.Build();
 
@@ -43,6 +58,9 @@ if (app.Environment.IsDevelopment())
     // app.UseSwagger();
     // app.UseSwaggerUI();
 }
+
+// Llamar el servicio de CORS
+app.UseCors("AllowSpecificOrigin");
 
 app.UseHttpsRedirection();
 
