@@ -16,10 +16,10 @@ public partial class CreateCountry
     private async Task Create()
     {
         var responseHttp = await _repository.PostAsync<Country>($"/api/countries", country);
-        if (!responseHttp.Error)
+        if (responseHttp.Error)
         {
-            // var message = await responseHttp.GetErrorMessageAsync();
-            await _sweetAlert.FireAsync("Error", "Inserto", SweetAlertIcon.Error);
+            var message = await responseHttp.GetErrorMessageAsync();
+            await _sweetAlert.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
 
