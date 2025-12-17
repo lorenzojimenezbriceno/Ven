@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ven.AccessData.Data;
+using Ven.Backend.Helpers;
 using Ven.Shared.Entities;
 
 namespace Ven.Backend.Controllers;
@@ -16,14 +17,16 @@ public class CountriesController : ControllerBase
         _context = context;
     }
 
-    // GET: api/Countries
+    // GET: api/countries
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+    public async Task<ActionResult<IEnumerable<Country>>> GetCountries([FromQuery] PaginationDTO pagination)
     {
-        return await _context.Countries.ToListAsync();
+        var queryable = _context.Countries.AsQueryable();
+        await HttpContext.InsertParameterPagination(queryable, pagination.RecordsNumber);
+        return await queryable.OrderBy(x => x.Name).Paginate(pagination).ToListAsync();
     }
 
-    // GET: api/Countries/5
+    // GET: api/countries/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Country>> GetCountry(int id)
     {
@@ -37,7 +40,7 @@ public class CountriesController : ControllerBase
         return country;
     }
 
-    // PUT: api/Countries/5
+    // PUT: api/countries/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
     public async Task<IActionResult> PutCountry(int id, Country country)
@@ -68,7 +71,7 @@ public class CountriesController : ControllerBase
         return NoContent();
     }
 
-    // POST: api/Countries
+    // POST: api/countries
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<Country>> PostCountry(Country country)
@@ -79,7 +82,7 @@ public class CountriesController : ControllerBase
         return CreatedAtAction("GetCountry", new { id = country.Id }, country);
     }
 
-    // DELETE: api/Countries/5
+    // DELETE: api/countries/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCountry(int id)
     {

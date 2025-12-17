@@ -13,7 +13,9 @@ public static class HttpContextExtensions
 
         double conteo = await queryable.CountAsync();
         double totalPaginas = Math.Ceiling(conteo / cantidadRegistrosAMostrar);
-        context.Response.Headers.Append("", conteo.ToString());
-        context.Response.Headers.Append("", totalPaginas.ToString());
+
+        // Se pasa la cantidad de registros y total de páginas en el encabezado http
+        context.Response.Headers.Append("Counting", conteo.ToString());
+        context.Response.Headers.Append("TotalPages", totalPaginas.ToString());
     }
 }

@@ -35,3 +35,10 @@ https://www.youtube.com/playlist?list=PLDNoyuGg6hYfwQcg5wnBn-BCvU8FUV1eL
 5. Inyeccion de dependencias en Blazor
     
     [Inject] private IRepository _repository { get; set; }
+
+6. Pasar variables por encabezados 
+
+    context.Response.Headers.Append("Counting", conteo.ToString());
+    context.Response.Headers.Append("TotalPages", totalPaginas.ToString());
+
+
