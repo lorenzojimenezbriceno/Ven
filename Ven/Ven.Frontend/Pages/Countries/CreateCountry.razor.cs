@@ -11,11 +11,13 @@ public partial class CreateCountry
     [Inject] private NavigationManager _navigationManager { get; set; } = null!;
     [Inject] private SweetAlertService _sweetAlert { get; set; } = null!;
 
-    private Country country = new();
+    private Country Country = new();
+
+    private FormCountry? FormCountry { get; set; }
 
     private async Task Create()
     {
-        var responseHttp = await _repository.PostAsync<Country>($"/api/countries", country);
+        var responseHttp = await _repository.PostAsync<Country>($"/api/countries", Country);
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessageAsync();
@@ -23,11 +25,13 @@ public partial class CreateCountry
             return;
         }
 
+        FormCountry!.FormPostedSuccessfully = true;
         _navigationManager.NavigateTo("/countries");
     }
 
     private void ReturnAction()
     {
+        FormCountry!.FormPostedSuccessfully = true;
         _navigationManager.NavigateTo("/countries");
     }
 }

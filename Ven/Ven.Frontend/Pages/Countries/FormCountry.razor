@@ -1,4 +1,6 @@
-﻿<EditForm Model="Country" OnValidSubmit="OnSubmit">
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="_editContext" OnValidSubmit="OnSubmit">
     <DataAnnotationsValidator />
 
     <div class="mb-3">
@@ -12,5 +14,3 @@
     <button class="btn btn-primary" type="submit">Guardar Cambios</button>
     <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
 </EditForm>
-
-

@@ -1,3 +1,4 @@
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Ven.Frontend.Repositories;
 using Ven.Shared.Entities;
@@ -7,6 +8,7 @@ namespace Ven.Frontend.Pages;
 public partial class IndexCountries
 {
     [Inject] private IRepository _repository { get; set; } = null!;
+    [Inject] private SweetAlertService _sweetAlert { get; set; } = null!;
 
     private int CurrentPage = 1;
     private int TotalPages;
@@ -28,6 +30,43 @@ public partial class IndexCountries
     {
         var responseHttp = await _repository.GetAsync<List<Country>>($"/api/countries?page={page}");
         Countries = responseHttp.Response;
+
         TotalPages = int.Parse(responseHttp.HttpResponseMessage.Headers.GetValues("TotalPages").FirstOrDefault()!);
+    }
+
+    public async Task Borrar(int id)
+    {
+        var result = await _sweetAlert.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmaction",
+            Text = "Estas Seguro de Borrar el Registro",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true
+        });
+
+        var confirmation = string.IsNullOrEmpty(result.Value);
+        if (confirmation)
+        {
+            return;
+        }
+
+        var responseHTTP = await _repository.DeleteAsync($"/api/countries/{id}");
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                await _sweetAlert.FireAsync("Error", "Registro No Encontrado", SweetAlertIcon.Error);
+            }
+            else
+            {
+                var messageError = await responseHTTP.GetErrorMessageAsync();
+                await _sweetAlert.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+            await SelectedPage(CurrentPage);
+        }
+        else
+        {
+            await SelectedPage(CurrentPage);
+        }
     }
 }

@@ -19,6 +19,10 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<DataContext>(x => 
     x.UseSqlServer("name=DefaultConnection", options => options.MigrationsAssembly("Ven.Backend")));
 
+// Instalar servicio para sembrar datos en la base de datos
+
+builder.Services.AddTransient<SeedDB>();
+
 // Agregar CORS
 
 builder.Services.AddCors(options =>
@@ -35,7 +39,12 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Ejecutar Servicio para sembrar datos en la base de datos
+
+SeedData(app);
+
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -60,12 +69,27 @@ if (app.Environment.IsDevelopment())
 }
 
 // Llamar el servicio de CORS
+
 app.UseCors("AllowSpecificOrigin");
 
+// Preparar el resto del pipeline
+
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
+
+/*
+ * Metodo para levantar una fabrica de 
+ */
+
+void SeedData(WebApplication app)
+{
+    IServiceScopeFactory? scopedFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+    using (IServiceScope? scope = scopedFactory!.CreateScope())
+    {
+        SeedDB? service = scope.ServiceProvider.GetService<SeedDB>();
+        service!.SeedAsync().Wait();
+    }
+}

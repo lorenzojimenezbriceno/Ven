@@ -28,6 +28,15 @@ https://www.youtube.com/playlist?list=PLDNoyuGg6hYfwQcg5wnBn-BCvU8FUV1eL
 
     app.UseCors("AllowSpecificOrigin");
 
+3. Comandos EF (https://learn.microsoft.com/en-us/ef/core/cli/powershell)
+
+    - Install-Package Microsoft.EntityFrameworkCore.Tools
+    - Update-Package Microsoft.EntityFrameworkCore.Tools
+
+    - Cada cambio en el modelo de las entidades de las bases de datos
+        1. add-migration CambiosBaseDatos
+        2. update-database
+
 3. EF, SWAG y REDOC
 
 4. HttpResponseWrapper

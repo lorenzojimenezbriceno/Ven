@@ -23,6 +23,7 @@ public class CountriesController : ControllerBase
     {
         var queryable = _context.Countries.AsQueryable();
         await HttpContext.InsertParameterPagination(queryable, pagination.RecordsNumber);
+
         return await queryable.OrderBy(x => x.Name).Paginate(pagination).ToListAsync();
     }
 
@@ -30,24 +31,33 @@ public class CountriesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Country>> GetCountry(int id)
     {
-        var country = await _context.Countries.FindAsync(id);
+        if (id <= 0)
+        {
+            return BadRequest("Id invalido");
+        }
 
+        var country = await _context.Countries.FindAsync(id);
         if (country == null)
         {
-            return NotFound();
+            return NotFound("No existge el registro solicitado");
         }
 
         return country;
     }
 
-    // PUT: api/countries/5
+    // PUT: api/countries
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutCountry(int id, Country country)
+    [HttpPut]
+    public async Task<IActionResult> PutCountry(Country country)
     {
-        if (id != country.Id)
+        if (country.Id <= 0)
         {
-            return BadRequest();
+            return BadRequest("Id invalido");
+        }
+
+        if (CountryExists(country.Name, country.Id))
+        {
+            return BadRequest("Ya existe un registro con el mismo nombre.");
         }
 
         _context.Entry(country).State = EntityState.Modified;
@@ -58,7 +68,7 @@ public class CountriesController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!CountryExists(id))
+            if (!CountryExists(country.Name))
             {
                 return NotFound();
             }
@@ -68,7 +78,7 @@ public class CountriesController : ControllerBase
             }
         }
 
-        return NoContent();
+        return Ok();
     }
 
     // POST: api/countries
@@ -76,6 +86,27 @@ public class CountriesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Country>> PostCountry(Country country)
     {
+        if (CountryExists(country.Name))
+        {
+            return BadRequest("Ya existe un registro con el mismo nombre.");
+        }
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!CountryExists(country.Name))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
         _context.Countries.Add(country);
         await _context.SaveChangesAsync();
 
@@ -95,11 +126,16 @@ public class CountriesController : ControllerBase
         _context.Countries.Remove(country);
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok();
     }
 
-    private bool CountryExists(int id)
+    private bool CountryExists(string name)
     {
-        return _context.Countries.Any(e => e.Id == id);
+        return _context.Countries.Any(e => e.Name.ToLower() == name.Trim().ToLower());
+    }
+
+    private bool CountryExists(string name, int Id)
+    {
+        return _context.Countries.Any(e => e.Name.ToLower() == name.Trim().ToLower() && e.Id != Id);
     }
 }

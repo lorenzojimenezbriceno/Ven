@@ -19,7 +19,7 @@ public class DataContext : DbContext
 
         // Validaciones
         modelBuilder.Entity<Country>()
-            .HasIndex(c => c.Id)
+            .HasIndex(c => c.Name)
             .IsUnique();
 
         // Para evitar eliminaciones en cascada accidentales

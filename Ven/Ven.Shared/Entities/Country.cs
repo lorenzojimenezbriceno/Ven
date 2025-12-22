@@ -11,6 +11,4 @@ public class Country
     [Required(ErrorMessage = "El campo {0} es obligatorio")]
     [MaxLength(200, ErrorMessage = "El campo {0} no puede ser mayor a {1}")]
     public string Name { get; set; } = null!;
-
-    public bool Active { get; set; }
 }
