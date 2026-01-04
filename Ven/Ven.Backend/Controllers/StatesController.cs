@@ -1,69 +1,68 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mono.TextTemplating;
+using System.Diagnostics.Metrics;
 using Ven.AccessData.Data;
 using Ven.Backend.Helpers;
 using Ven.Shared.Entities;
 
 namespace Ven.Backend.Controllers;
 
-[Route("api/countries")]
+[Route("api/states")]
 [ApiController]
-public class CountriesController : ControllerBase
+public class StatesController : ControllerBase
 {
     private readonly DataContext _context;
 
-    public CountriesController(DataContext context)
+    public StatesController(DataContext context)
     {
         _context = context;
     }
 
-    // GET: api/countries
+    // GET: api/States
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Country>>> GetCountries([FromQuery] PaginationDTO pagination)
+    public async Task<ActionResult<IEnumerable<Shared.Entities.State>>> GetCountries([FromQuery] PaginationDTO pagination)
     {
-        var queryable = _context.Countries.AsQueryable();
+        var queryable = _context.States.Where(x => x.CountryId == pagination.Id).Include(x => x.Cities).AsQueryable();
+
         await HttpContext.InsertParameterPagination(queryable, pagination.RecordsNumber);
 
         return await queryable.OrderBy(x => x.Name).Paginate(pagination).ToListAsync();
     }
 
-    // GET: api/countries/5
+
+    // GET: api/States/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Country>> GetCountry(int id)
+    public async Task<ActionResult<Shared.Entities.State>> GetState(int id)
     {
-        if (id <= 0)
+        var state = await _context.States.FindAsync(id);
+
+        if (state == null)
         {
-            return BadRequest("Id invalido");
+            return NotFound();
         }
 
-        var country = await _context.Countries.FindAsync(id);
-        if (country == null)
-        {
-            return NotFound("No existge el registro solicitado");
-        }
-
-        return country;
+        return state;
     }
 
-    // PUT: api/countries
+    // PUT: api/States/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut]
-    public async Task<IActionResult> PutCountry(Country country)
+    public async Task<IActionResult> PutState(Shared.Entities.State state)
     {
-        if (country.Id <= 0 || String.IsNullOrEmpty(country.Name) || country.Name.Trim() == String.Empty)
+        if (state.StateId <= 0 || state.CountryId <= 0 || String.IsNullOrEmpty(state.Name) || state.Name.Trim() == String.Empty)
         {
-            return BadRequest("Id invalido");
+            return BadRequest("Ids de estado y pais invalidos");
         }
 
-        country.Name = country.Name.Trim();
+        state.Name = state.Name.Trim();
 
-        if (CountryExists(country.Name, country.Id))
+        if (StateExists(state.Name, state.StateId, state.CountryId))
         {
             return BadRequest("Ya existe un registro con el mismo nombre.");
         }
 
-        _context.Entry(country).State = EntityState.Modified;
+        _context.Entry(state).State = EntityState.Modified;
 
         try
         {
@@ -71,7 +70,7 @@ public class CountriesController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!CountryExists(country.Name))
+            if (!StateExists(state.Name, state.CountryId))
             {
                 return NotFound();
             }
@@ -79,37 +78,30 @@ public class CountriesController : ControllerBase
             {
                 throw;
             }
-        }
-        catch (DbUpdateException dbUpdateException)
-        {
-            if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
-            {
-                return BadRequest("Ya existe un Registro con el mismo nombre.");
-            }
-            else
-            {
-                return BadRequest(dbUpdateException.InnerException.Message);
-            }
-        }
-        catch (Exception exception)
-        {
-            return BadRequest(exception.Message);
         }
 
         return Ok();
     }
 
-    // POST: api/countries
+
+    // POST: api/States
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<Country>> PostCountry(Country country)
+    public async Task<ActionResult<Shared.Entities.State>> PostState(Shared.Entities.State state)
     {
-        if (CountryExists(country.Name))
+        if (state.StateId <= 0 || state.CountryId <= 0 || String.IsNullOrEmpty(state.Name) || state.Name.Trim() == String.Empty)
+        {
+            return BadRequest("Ids de estado y pais invalidos");
+        }
+
+        state.Name = state.Name.Trim();
+
+        if (StateExists(state.Name, state.CountryId))
         {
             return BadRequest("Ya existe un registro con el mismo nombre.");
         }
 
-        country.Name = country.Name.Trim();
+        _context.States.Add(state);
 
         try
         {
@@ -117,7 +109,7 @@ public class CountriesController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!CountryExists(country.Name))
+            if (!StateExists(state.Name, state.CountryId))
             {
                 return NotFound();
             }
@@ -142,26 +134,23 @@ public class CountriesController : ControllerBase
             return BadRequest(exception.Message);
         }
 
-        _context.Countries.Add(country);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetCountry", new { id = country.Id }, country);
+        return CreatedAtAction("GetState", new { id = state.StateId }, state);
     }
 
-    // DELETE: api/countries/5
+    // DELETE: api/States/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteCountry(int id)
+    public async Task<IActionResult> DeleteState(int id)
     {
         try
         {
-            var country = await _context.Countries.FindAsync(id);
-            if (country == null)
+            var state = await _context.States.FindAsync(id);
+            if (state == null)
             {
                 return NotFound();
             }
 
-            _context.Countries.Remove(country);
-
+            _context.States.Remove(state);
+            
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -182,16 +171,16 @@ public class CountriesController : ControllerBase
         }
     }
 
-    private bool CountryExists(string name)
+    private bool StateExists(string name, int countryId)
     {
-        return _context.Countries
-            .Any(e => e.Name.Trim().ToLower() == name.Trim().ToLower());
+        return _context.States
+            .Any(e => e.CountryId == countryId && e.Name.Trim().ToLower() == name.Trim().ToLower());
     }
 
-    // Los paises tienen que tener un nombre distinto, comprobacion cuando se renombra un pais.
-    private bool CountryExists(string name, int Id)
+    // Los estados tienen que tener un nombre distinto, comprobacion cuando se renombra un estado.
+    private bool StateExists(string name, int stateId, int countryId)
     {
-        return _context.Countries
-            .Any(e => e.Name.ToLower() == name.Trim().ToLower() && e.Id != Id);
+        return _context.States
+            .Any(e => e.Name.ToLower() == name.Trim().ToLower() && e.StateId != stateId && e.CountryId == countryId);
     }
 }

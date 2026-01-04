@@ -23,7 +23,8 @@
                             @country.Name
                         </td>
                         <td>
-                            <a class="btn btn-warning" href="/Countries/edit/@country.Id">Editar</a>
+                            <a class="btn btn-warning" href="/countries/edit/@country.Id">Editar</a>
+                            <a class="btn btn-info" href="/countries/details/@country.Id">Estados</a>
                             <button class="btn btn-danger" @onclick="@(() => Borrar(country.Id))">Borrar</button>
                         </td>
                     </tr>

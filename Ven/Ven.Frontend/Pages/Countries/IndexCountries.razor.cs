@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Ven.Frontend.Repositories;
 using Ven.Shared.Entities;
 
-namespace Ven.Frontend.Pages;
+namespace Ven.Frontend.Pages.Countries;
 
 public partial class IndexCountries
 {
@@ -38,7 +38,7 @@ public partial class IndexCountries
     {
         var result = await _sweetAlert.FireAsync(new SweetAlertOptions
         {
-            Title = "Confirmaction",
+            Title = "Confirmacion",
             Text = "Estas Seguro de Borrar el Registro",
             Icon = SweetAlertIcon.Question,
             ShowCancelButton = true
