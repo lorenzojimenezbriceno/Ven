@@ -36,16 +36,19 @@ https://www.youtube.com/playlist?list=PLDNoyuGg6hYfwQcg5wnBn-BCvU8FUV1eL
     - Cada cambio en el modelo de las entidades de las bases de datos
         1. add-migration CambiosBaseDatos
         2. update-database
+    
+    - Cuando se desea limpiar la base de datos para con SeedDB.cs se agreguen los cambios
+        1. drop-database
 
-3. EF, SWAG y REDOC
+4. EF, SWAG y REDOC
 
-4. HttpResponseWrapper
+5. HttpResponseWrapper
 
-5. Inyeccion de dependencias en Blazor
+6. Inyeccion de dependencias en Blazor
     
     [Inject] private IRepository _repository { get; set; }
 
-6. Pasar variables por encabezados 
+7. Pasar variables por encabezados 
 
     context.Response.Headers.Append("Counting", conteo.ToString());
     context.Response.Headers.Append("TotalPages", totalPaginas.ToString());
