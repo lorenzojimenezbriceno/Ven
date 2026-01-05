@@ -22,7 +22,7 @@ public class CitiesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<City>>> GetCountries([FromQuery] PaginationDTO pagination)
     {
-        var queryable = _context.Cities.Where(x => x.CityId == pagination.Id).Include(x => x.State).AsQueryable();
+        var queryable = _context.Cities.Where(x => x.StateId == pagination.Id).Include(x => x.State).AsQueryable();
 
         await HttpContext.InsertParameterPagination(queryable, pagination.RecordsNumber);
 
@@ -103,10 +103,7 @@ public class CitiesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<City>> PostCity(City city)
     {
-        _context.Cities.Add(city);
-        await _context.SaveChangesAsync();
-
-        if (city.StateId <= 0 || city.CityId <= 0 || String.IsNullOrEmpty(city.Name) || city.Name.Trim() == String.Empty)
+        if (city.StateId <= 0 || String.IsNullOrEmpty(city.Name) || city.Name.Trim() == String.Empty)
         {
             return BadRequest("Ids de estado y pais invalidos");
         }

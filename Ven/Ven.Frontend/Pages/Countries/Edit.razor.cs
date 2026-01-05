@@ -5,7 +5,7 @@ using Ven.Shared.Entities;
 
 namespace Ven.Frontend.Pages.Countries;
 
-public partial class EditCountry
+public partial class Edit
 {
     [Inject] private IRepository _repository { get; set; } = null!;
     [Inject] private NavigationManager _navigationManager { get; set; } = null!;
@@ -13,7 +13,7 @@ public partial class EditCountry
 
     private Country? Country;
 
-    private FormCountry? FormCountry { get; set; }
+    private Form? Form { get; set; }
 
     [Parameter]
     public int Id { get; set; }
@@ -43,7 +43,7 @@ public partial class EditCountry
         }
     }
 
-    private async Task Edit()
+    private async Task _Edit()
     {
         var responseHttp = await _repository.PutAsync<Country>($"/api/countries", Country!);
         if (responseHttp.Error)
@@ -53,13 +53,13 @@ public partial class EditCountry
             return;
         }
 
-        FormCountry!.FormPostedSuccessfully = true;
+        Form!.FormPostedSuccessfully = true;
         _navigationManager.NavigateTo("/countries");
     }
 
     private void ReturnAction()
     {
-        FormCountry!.FormPostedSuccessfully = true;
+        Form!.FormPostedSuccessfully = true;
         _navigationManager.NavigateTo("/countries");
     }
 }

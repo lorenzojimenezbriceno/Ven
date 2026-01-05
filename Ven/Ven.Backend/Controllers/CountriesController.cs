@@ -169,7 +169,7 @@ public class CountriesController : ControllerBase
         {
             if (dbUpdateException.InnerException!.Message.Contains("REFERENCE"))
             {
-                return BadRequest("Existen Registros Relacionados y no se puede Eliminar");
+                return BadRequest("Existen Registros Relacionados y no se puede Eliminar el registro");
             }
             else
             {

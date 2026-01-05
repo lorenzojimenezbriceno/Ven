@@ -89,7 +89,7 @@ public class StatesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Shared.Entities.State>> PostState(Shared.Entities.State state)
     {
-        if (state.StateId <= 0 || state.CountryId <= 0 || String.IsNullOrEmpty(state.Name) || state.Name.Trim() == String.Empty)
+        if (state.CountryId <= 0 || String.IsNullOrEmpty(state.Name) || state.Name.Trim() == String.Empty)
         {
             return BadRequest("Ids de estado y pais invalidos");
         }
@@ -158,7 +158,7 @@ public class StatesController : ControllerBase
         {
             if (dbUpdateException.InnerException!.Message.Contains("REFERENCE"))
             {
-                return BadRequest("Existen Registros Relacionados y no se puede Eliminar");
+                return BadRequest("Existen Registros Relacionados y no se puede Eliminar el registro");
             }
             else
             {

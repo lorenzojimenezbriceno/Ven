@@ -5,7 +5,7 @@ using Ven.Shared.Entities;
 
 namespace Ven.Frontend.Pages.Countries;
 
-public partial class DetailCountry
+public partial class Detail
 {
     [Inject] private IRepository _repository { get; set; } = null!;
     [Inject] private SweetAlertService _sweetAlert { get; set; } = null!;

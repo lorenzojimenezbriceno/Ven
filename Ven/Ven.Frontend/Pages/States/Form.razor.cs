@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
 using Ven.Shared.Entities;
 
-namespace Ven.Frontend.Pages.Countries;
+namespace Ven.Frontend.Pages.States;
 
-public partial class FormCountry
+public partial class Form
 {
     [Inject] private SweetAlertService _sweetAlert { get; set; } = null!;
 
@@ -15,7 +15,7 @@ public partial class FormCountry
     public bool FormPostedSuccessfully { get; set; } = false;
 
     [Parameter, EditorRequired]
-    public Country Country { get; set; } = null!;
+    public State State { get; set; } = null!;
 
     [Parameter, EditorRequired]
     public EventCallback OnSubmit { get; set; }
@@ -25,9 +25,10 @@ public partial class FormCountry
 
     protected override void OnInitialized()
     {
-        _editContext = new(Country);
+        _editContext = new(State);
     }
 
+    // Para evitar salirse de la forma durante la edicion
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
     {
         var formWasEdited = _editContext.IsModified();
