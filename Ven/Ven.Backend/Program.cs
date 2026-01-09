@@ -37,9 +37,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin", builder =>
     {
         builder
-            .WithOrigins("https://localhost:7098") // Dominio de la aplicacion Blazor
+            // Agregar el dominio de la aplicacion Blazor
+            .WithOrigins("https://localhost:7098")
             .AllowAnyHeader()
             .AllowAnyMethod()
+            // Agregar dos headers personalizados para la paginacion
             .WithExposedHeaders(new string[] { "Totalpages", "Counting" });
     });
 });

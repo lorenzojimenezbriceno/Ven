@@ -21,8 +21,8 @@ public class SeedDB
 
     private async Task CheckCountriesAsync()
     {
-       if (!context.Countries.Any())
-       {
+        if (!context.Countries.Any())
+        {
             context.Countries.Add(new Country()
             {
                 Name = "Colombia",
@@ -51,36 +51,36 @@ public class SeedDB
                         }
                     },
                     new State {
-                        Name = "Amazonas",
+                        Name = "Cundinamarca",
                         Cities = new List<City>()
                         {
-                            new City { Name = "Amazonas 1" },
-                            new City { Name = "Amazonas 2" },
-                            new City { Name = "Amazonas 3" },
-                            new City { Name = "Amazonas 4" },
-                            new City { Name = "Amazonas 5" },
+                            new City{ Name = "Soacha"},
+                            new City { Name = "Facatativa"},
+                            new City { Name = "Fusagasuga"},
+                            new City { Name = "Chia"},
+                            new City { Name = "Zipaquira"}
                         }
                     },
                     new State {
                         Name = "Atlántico",
                         Cities = new List<City>()
                         {
-                            new City { Name = "Atlántico 1" },
-                            new City { Name = "Atlántico 2" },
-                            new City { Name = "Atlántico 3" },
-                            new City { Name = "Atlántico 4" },
-                            new City { Name = "Atlántico 5" },
+                            new City { Name = "Baranoa" },
+                            new City { Name = "Barranquilla" },
+                            new City { Name = "Campo de la Cruz" },
+                            new City { Name = "Candelaria" },
+                            new City { Name = "Galapa" },
                         }
                     },
                     new State {
                         Name = "Bolívar",
                         Cities = new List<City>()
                         {
-                            new City { Name = "Bolívar 1" },
-                            new City { Name = "Bolívar 2" },
-                            new City { Name = "Bolívar 3" },
-                            new City { Name = "Bolívar 4" },
-                            new City { Name = "Bolívar 5" },
+                            new City { Name = "El Carmen de Bolívar" },
+                            new City { Name = "El Guamo" },
+                            new City { Name = "El Peñón" },
+                            new City { Name = "Hatillo de Loba" },
+                            new City { Name = "Cartagena de Indias" },
                         }
                     }
                 }
@@ -117,87 +117,93 @@ public class SeedDB
                         Name = "California",
                         Cities = new List<City>()
                         {
-                            new City { Name = " 1" },
-                            new City { Name = " 2" },
-                            new City { Name = " 3" },
-                            new City { Name = " 4" },
-                            new City { Name = " 5" },
+                            new City { Name = "Los Angeles" },
+                            new City { Name = "San Diego" },
+                            new City { Name = "San Jose" },
+                            new City { Name = "San Francisco" },
+                            new City { Name = "Sacramento" },
                         }
                     },
                     new State {
                         Name = "Virginia",
                         Cities = new List<City>()
                         {
-                            new City { Name = "Virginia 1" },
-                            new City { Name = "Virginia 2" },
-                            new City { Name = "Virginia 3" },
-                            new City { Name = "Virginia 4" },
-                            new City { Name = "Virginia 5" },
+                            new City { Name = "Virginia Beach" },
+                            new City { Name = "Chesapeake" },
+                            new City { Name = "Richmond" },
+                            new City { Name = "Arlington" },
+                            new City { Name = "Newport News" },
                         }
                     },
                     new State {
                         Name = "Ohio",
                         Cities = new List<City>()
                         {
-                            new City { Name = "Ohio 1" },
-                            new City { Name = "Ohio 2" },
-                            new City { Name = "Ohio 3" },
-                            new City { Name = "Ohio 4" },
-                            new City { Name = "Ohio 5" },
+                            new City { Name = "Columbus" },
+                            new City { Name = "Cleveland" },
+                            new City { Name = "Cincinnati" },
+                            new City { Name = "Toledo" },
+                            new City { Name = "Akron" },
                         }
                     },
                     new State {
                         Name = "Michigan",
                         Cities = new List<City>()
                         {
-                            new City { Name = "Michigan 1" },
-                            new City { Name = "Michigan 2" },
-                            new City { Name = "Michigan 3" },
-                            new City { Name = "Michigan 4" },
-                            new City { Name = "Michigan 5" },
+                            new City { Name = "Detroit" },
+                            new City { Name = "Grand Rapids" },
+                            new City { Name = "Warren" },
+                            new City { Name = "Sterling Heights" },
+                            new City { Name = "Lansing" },
                         }
                     },
                     new State {
                         Name = "Arizona",
                         Cities = new List<City>()
                         {
-                            new City { Name = "Arizona 1" },
-                            new City { Name = "Arizona 2" },
-                            new City { Name = "Arizona 3" },
-                            new City { Name = "Arizona 4" },
-                            new City { Name = "Arizona 5" },
+                            new City { Name = "Phoenix" },
+                            new City { Name = "Tucson" },
+                            new City { Name = "Mesa" },
+                            new City { Name = "Chandler" },
+                            new City { Name = "Scottsdale" },
                         }
                     },
                 }
             });
 
-            /*
-             * OTRA FORMA
-             
-                await context.Countries.AddRangeAsync(new List<Country>()
+            context.Countries.Add(new Country
+            {
+                Name = "Mexico",
+                States = new List<State>()
                 {
-                    new Country { Name = "Andorra" },
-                    new Country { Name = "Belgica" },
-                    new Country { Name = "Belorusia" },
-                    new Country { Name = "Canada" },
-                    new Country { Name = "China" },
-                    new Country { Name = "Corea" },
-                    new Country { Name = "Colombia" },
-                    new Country { Name = "Costa Rica" },
-                    new Country { Name = "El Salvador" },
-                    new Country { Name = "Espana" },
-                    new Country { Name = "Estados Unidos" },
-                    new Country { Name = "Dinamarca" },
-                    new Country { Name = "Nicaragua" },
-                    new Country { Name = "Honduras" },
-                    new Country { Name = "Italia" },
-                    new Country { Name = "Reino Unido" },
-                    new Country { Name = "Rusia" },
-                    new Country { Name = "Suiza" },
-                });
-            */
+                    new State
+                    {
+                        Name = "Chiapas",
+                        Cities = new List<City>()
+                        {
+                            new City { Name = "Tuctla"},
+                            new City { Name = "Tapachula"},
+                            new City { Name = "San Cristobal"},
+                            new City { Name = "Comitan"},
+                            new City { Name = "Cintalapa"}
+                        }
+                    },
+                    new State
+                    {
+                        Name = "Colima",
+                        Cities = new List<City>()
+                        {
+                            new City { Name = "Manzanillo"},
+                            new City { Name = "Queseria"},
+                            new City { Name = "El Colomo"},
+                            new City { Name = "Comala"},
+                            new City { Name = "Armeria"}
+                        }
+                    }
+                }
+            });
 
             await context.SaveChangesAsync();
-       }
+        }
     }
 }
